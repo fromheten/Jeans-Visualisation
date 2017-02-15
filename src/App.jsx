@@ -34,17 +34,19 @@ class App extends Component {
           <h2>Sales Explorer</h2>
         </div>
         <table>
-          <tr>
-            <th>OrderDate</th>
-            <th>DeliveryCountry</th>
-            <th>Manufacturer</th>
-            <th>Gender</th>
-            <th>Size</th>
-            <th>Colour</th>
-            <th>Style</th>
-            <th>Count</th>
-          </tr>
-          {map(Sale.SaleRow, this.state.sales)}
+          <tbody>
+            <tr>
+              <th>OrderDate</th>
+              <th>DeliveryCountry</th>
+              <th>Manufacturer</th>
+              <th>Gender</th>
+              <th>Size</th>
+              <th>Colour</th>
+              <th>Style</th>
+              <th>Count</th>
+            </tr>
+            {map(Sale.SaleRow, this.state.sales)}
+          </tbody>
         </table>
       </div>
     );

@@ -37,7 +37,7 @@ export function createRandomSale (): SaleType {
     OrderDate: (new Date(start.getTime() + Math.random() * ((new Date().getTime()) - new Date(2012, 0, 1).getTime()))),
     DeliveryCountry: randomFrom(["Sweden", "UK", "Germany", "France", "Japan", "China", "Austria"]),
     Manufacturer: randomFrom(["Levis", "Ben's Jeans", "ACNE", "Jeans Company"]),
-    Gender: randomFrom(["Male", "Female", "Unisex", "typeerrors??"]),
+    Gender: randomFrom(["Male", "Female", "Unisex"]),
     Size: 34,
     Colour: "blue",
     Style: "Fit",
