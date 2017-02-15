@@ -1,12 +1,15 @@
 // @flow
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 const r = require('rambda')
 
-const Sale = require('./Sale')
+import * as Sale from './Sale'
+import type {SaleType} from './Sale'
 
 class App extends Component {
+  state: {
+    sales: SaleType[]
+  }
   constructor(props: any) {
     super(props);
     // Poor mans redux - simple version for this demonstration
@@ -26,10 +29,7 @@ class App extends Component {
           Simulate loading sales from server
         </button>
         <div className="App-header">
-          <img src={logo}
-               className="App-logo"
-               alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>Sales Explorer</h2>
         </div>
         <table>
           <tr>
