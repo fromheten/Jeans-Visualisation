@@ -6,7 +6,7 @@ import {map, addIndex} from 'ramda'
 
 type Gender = "Male"
             | "Female"
-            | "Unisex" // Controversial topic 2017
+            | "Unisex" // Controversial topic 2017 ;-)
 
 type Style = "Relaxed"
            | "Skinny"
@@ -59,9 +59,11 @@ export function SaleRow (sale: SaleType, index: number) {
       <td>{sale.Colour.toString()}</td>
       <td>{sale.Style.toString()}</td>
       <td>{sale.Count.toString()}</td>
-    </tr>)
+    </tr>
+  )
 }
 
+const mapIndexed = addIndex(map) // tandori curry
 export function SalesVisualiserView (props: {sales: SaleType[],
                                              recipe: RecipeType}) {
   return (
@@ -78,7 +80,7 @@ export function SalesVisualiserView (props: {sales: SaleType[],
           <th>Style</th>
           <th>Count</th>
         </tr>
-        {addIndex(map)(SaleRow, applyRecipe(props.recipe, props.sales))}
+        {mapIndexed(SaleRow, applyRecipe(props.recipe, props.sales))}
       </tbody>
     </table>
   )
