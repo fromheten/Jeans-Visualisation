@@ -1,20 +1,20 @@
 // Contains 20 mock sales, only for tests
 export default [
   {
-    "OrderDate":(new Date("2016-05-31T03:55:06.519Z")),
-    "DeliveryCountry":"Sweden",
-    "Manufacturer":"Jeans Company",
-    "Gender":"Unisex",
+    "OrderDate":(new Date("2016-03-09T15:53:22.507Z")),
+    "DeliveryCountry":"UK",
+    "Manufacturer":"Ben's Jeans",
+    "Gender":"Male",
     "Size":34,
     "Colour":"blue",
     "Style":"Fit",
     "Count":5
   },
   {
-    "OrderDate":(new Date("2016-03-09T15:53:22.507Z")),
-    "DeliveryCountry":"UK",
-    "Manufacturer":"Ben's Jeans",
-    "Gender":"Male",
+    "OrderDate":(new Date("2016-05-31T03:55:06.519Z")),
+    "DeliveryCountry":"Sweden",
+    "Manufacturer":"Jeans Company",
+    "Gender":"Unisex",
     "Size":34,
     "Colour":"blue",
     "Style":"Fit",

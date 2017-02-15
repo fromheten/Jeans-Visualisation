@@ -2,15 +2,16 @@
 import {applyRecipe} from './Recipe'
 import type {RecipeType} from './Recipe'
 import * as Sale from './Sale'
-import {map, range, sortBy, take} from 'ramda'
+import type {SaleType} from './Sale'
+import {map, range, sortBy, take, reverse} from 'ramda'
 import mockSales from './mockSales'
 
-const sortByDate = sortBy((sale) => sale.OrderDate.getTime())
 const sortByDateRecipe: RecipeType = {
-  fn: map(sortByDate), // SalesType[] => SalesType[]
+  fn: (sales: SaleType[]): SaleType[] =>
+    reverse(sortBy((sale) => sale.OrderDate.getTime(), sales)),
   name: "Recipe made for test purposes",
   author: "Martin Josefsson",
-  license: "GNU GPL v3" /* It's just for a test! */}
+  license: "GNU GPL v3"}
 
 it('applies a "sort by date" recipe successfully', () =>
   expect(

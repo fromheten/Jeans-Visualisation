@@ -1,20 +1,34 @@
 // @flow
-import React, { Component } from 'react';
-import './App.css';
-import {concat, map, range} from 'ramda'
+import React, { Component } from 'react'
+import './App.css'
+import {concat, map, range, sortBy, reverse} from 'ramda'
 import * as Sale from './Sale'
 import type {SaleType} from './Sale'
 
+import type {RecipeType} from './Recipe'
+
+const sortByDateRecipe: RecipeType = {
+  // SaleType[] => SaleType[]
+  fn: (sales: SaleType[]): SaleType[] =>
+    reverse(sortBy((sale) => sale.OrderDate.getTime(), sales)),
+  name: "Recipe made for test purposes",
+  author: "Martin Josefsson",
+  license: "GNU GPL v3"
+}
+
 class App extends Component {
   state: {
-    sales: SaleType[]
+    sales: SaleType[],
+    recipe: RecipeType
   }
   constructor(props: any) {
-    super(props);
+    super(props)
     // Poor mans redux - simple version for this demonstration
     window.updateAppSate = this.setState
-
-    this.state = {sales: []}
+    this.state = {
+      sales: [],
+      recipe: sortByDateRecipe // By default sort by date, newest first
+    }
   }
   simulateAjax() {
     this.setState(() => ({
@@ -33,23 +47,11 @@ class App extends Component {
         <div className="App-header">
           <h2>Sales Explorer</h2>
         </div>
-        <table>
-          <tbody>
-            <tr>
-              <th>OrderDate</th>
-              <th>DeliveryCountry</th>
-              <th>Manufacturer</th>
-              <th>Gender</th>
-              <th>Size</th>
-              <th>Colour</th>
-              <th>Style</th>
-              <th>Count</th>
-            </tr>
-            {map(Sale.SaleRow, this.state.sales)}
-          </tbody>
-        </table>
+        Sorted by date, newest first
+        <Sale.SalesVisualiserView sales={this.state.sales}
+                                  recipe={this.state.recipe} />
       </div>
-    );
+    )
   }
 }
 

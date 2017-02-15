@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
-// Contains functions and types regarding sales
+import {applyRecipe} from './Recipe'
+import type {RecipeType} from './Recipe'
+import {map, addIndex} from 'ramda'
 
 type Gender = "Male"
             | "Female"
@@ -45,16 +47,39 @@ export function createRandomSale (): SaleType {
   }
 }
 
-export function SaleRow (sale: SaleType) {
+export function SaleRow (sale: SaleType, index: number) {
   return (
-    <tr key={Math.random()}>
-    <td>{sale.OrderDate.toString()}</td>
-    <td>{sale.DeliveryCountry.toString()}</td>
-    <td>{sale.Manufacturer.toString()}</td>
-    <td>{sale.Gender.toString()}</td>
-    <td>{sale.Size.toString()}</td>
-    <td>{sale.Colour.toString()}</td>
-    <td>{sale.Style.toString()}</td>
-    <td>{sale.Count.toString()}</td>
+    <tr key={index}>
+      <td>{index}</td>
+      <td>{sale.OrderDate.toString()}</td>
+      <td>{sale.DeliveryCountry.toString()}</td>
+      <td>{sale.Manufacturer.toString()}</td>
+      <td>{sale.Gender.toString()}</td>
+      <td>{sale.Size.toString()}</td>
+      <td>{sale.Colour.toString()}</td>
+      <td>{sale.Style.toString()}</td>
+      <td>{sale.Count.toString()}</td>
     </tr>)
+}
+
+export function SalesVisualiserView (props: {sales: SaleType[],
+                                             recipe: RecipeType}) {
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <th>#</th>
+          <th>OrderDate</th>
+          <th>DeliveryCountry</th>
+          <th>Manufacturer</th>
+          <th>Gender</th>
+          <th>Size</th>
+          <th>Colour</th>
+          <th>Style</th>
+          <th>Count</th>
+        </tr>
+        {addIndex(map)(SaleRow, applyRecipe(props.recipe, props.sales))}
+      </tbody>
+    </table>
+  )
 }

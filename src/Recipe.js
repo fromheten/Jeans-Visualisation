@@ -17,5 +17,5 @@ export type RecipeType = {
 }
 
 export function applyRecipe(recipe: RecipeType, salesList: SaleType[]): SaleType[] {
-  return salesList
+  return recipe.fn(salesList)
 }
