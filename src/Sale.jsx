@@ -2,7 +2,7 @@
 import React from 'react';
 import {applyRecipe} from './Recipe'
 import type {RecipeType} from './Recipe'
-import {map, addIndex, range} from 'ramda'
+import {range} from 'ramda'
 
 type Gender = "Male"
             | "Female"
@@ -63,7 +63,6 @@ export function SaleRow (sale: SaleType, index: number) {
   )
 }
 
-const mapIndexed = addIndex(map) // tandori curry
 export function SalesVisualiserView (props: {sales: SaleType[],
                                              recipe: RecipeType}) {
   return (
@@ -80,7 +79,7 @@ export function SalesVisualiserView (props: {sales: SaleType[],
           <th>Style</th>
           <th>Count</th>
         </tr>
-        {mapIndexed(SaleRow, applyRecipe(props.recipe, props.sales))}
+        {applyRecipe(props.recipe, props.sales).map(SaleRow)}
       </tbody>
     </table>
   )

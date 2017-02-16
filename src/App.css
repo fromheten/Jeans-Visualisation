@@ -8,6 +8,10 @@
   color: white;
 }
 
+.error {
+  background: red;
+}
+
 .App-intro {
   font-size: large;
 }

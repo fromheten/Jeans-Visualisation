@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import './App.css'
-import {concat, range, assoc, or, not, equals} from 'ramda'
+import {concat, range, assoc, not, equals} from 'ramda'
 import * as Sale from './Sale'
 import type {SaleType} from './Sale'
 
@@ -35,15 +35,19 @@ export default class App extends Component {
     this.state = {
       sales: [],
       recipe: sortByDateNewestFirstRecipe,/*By default sort by date, newest first*/
-      recipes: or(store.get('recipes'), // In prod, would likely be a server
-                  [sortByDateNewestFirstRecipe, // Defaults
-                   sortByDateOldestFirstRecipe]),
-      isEditing: false}
+      recipes: (localStorage.recipes || [sortByDateNewestFirstRecipe, // Defaults
+                                         sortByDateOldestFirstRecipe]),
+      isEditing: false,
+      error: false
+    }
     window.state = {
       // eslint-disable-next-line
       setRecipe: this.setRecipe.bind(this),
       toggleEditor: this.toggleEditor.bind(this),
-      saveRecipe: this.saveRecipe.bind(this)}}
+      saveRecipe: this.saveRecipe.bind(this)
+    }
+  }
+
   setRecipe (recipe: RecipeType) {this.setState(assoc('recipe', recipe, this.state))}
   toggleEditor () {
     const oldState = this.state;
@@ -58,29 +62,43 @@ export default class App extends Component {
     const newRecipe = assoc(change.name,
                             change.value,
                             oldRecipe)
-    const oldRecipeCollection = this.state.recipes
+
     const oldState = this.state
-    this.setState(
+    let error = true;
+    try {
+      eval(newRecipe.source)
+      error = false
+    }
+    catch (e) {
+      error = e
+    }
+    const newRecipesState = assoc(
+      'error',
+      error,
       assoc('recipe',
             newRecipe,
             assoc('recipes',
                   saveRecipe(oldRecipe,
                              newRecipe,
-                             oldRecipeCollection),
-                  oldState)))}
+                             oldState.recipes),
+                  oldState)))
+
+    if (!this.state.error) {store.set('recipes', newRecipesState.recipes)}
+    return this.setState(newRecipesState)}
 
   simulateAjax() {
     this.setState(() => ({
       sales: concat(
         this.state.sales,
         (range(0, 100).map(Sale.createRandomSale)))}))}
+
   render() {
     return (
       <div className="App">
         <button onClick={this.simulateAjax.bind(this)}>
           Simulate loading 100 sales from server
         </button>
-        <div className="App-header">
+        <div className={this.state.error ? 'error App-header ' : 'App-header '}>
           <h2>Sales Explorer</h2>
           {this.state.isEditing ? <RecipeEditorView recipe={this.state.recipe} />
            : <RecipeDisplayView recipe={this.state.recipe} />}

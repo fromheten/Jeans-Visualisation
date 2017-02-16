@@ -45,9 +45,7 @@ export function RecipeMenuView(props: {recipes: RecipeType[]}) {
   )
 }
 
-export function RecipeEditorView (props: {
-  recipe: RecipeType
-}) {
+export function RecipeEditorView (props: {recipe: RecipeType}) {
   return (
     <form onChange={(e) => window.state.saveRecipe(props.recipe, {
         name: e.target.name,
@@ -56,8 +54,11 @@ export function RecipeEditorView (props: {
       Currently editing <input type="text"
                                name="name"
                                value={props.recipe.name} />
-      <button>
-        Save
+      <button onClick={window.state.toggleEditor}>
+        Done
+      </button>
+      <button onClick={alert}>
+        Clone recipe
       </button>
       <div>
         <div>
