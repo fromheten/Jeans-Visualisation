@@ -9,32 +9,58 @@
 
 import React from 'react'
 import type {SaleType} from './Sale'
-import {map, addIndex} from 'ramda'
+import './Recipe.css'
 
 export type RecipeType = {
-  fn: (salesList: SaleType[]) => SaleType[],
+  // fn: (salesList: SaleType[]) => SaleType[],
+  source: string,
   name: string,
   author: string,
   license: string
 }
 
 export function applyRecipe(recipe: RecipeType, salesList: SaleType[]): SaleType[] {
-  return recipe.fn(salesList)
+  // eslint-disable-next-line
+  const R = require('ramda')
+  // eslint-disable-next-line
+  return eval(recipe.source)(salesList)
 }
 
 const RecipeMenuItemView = (recipe, index) => (
   <li key={index}>
-    <button onClick={(e) => window.setRecipe(recipe)} >
+    <button onClick={(e) => window.state.setRecipe(recipe)} >
       {recipe.name} ({recipe.author})
     </button>
   </li>
 )
 
-const mapIndexed = addIndex(map) // Curry is yummy!
 export function RecipeMenuView(props: {recipes: RecipeType[]}) {
   return (
     <ul>
-      {mapIndexed(RecipeMenuItemView, props.recipes)}
+      {props.recipes.map(RecipeMenuItemView)}
     </ul>
+  )
+}
+
+export function RecipeEditor (props: {
+  isEditing: boolean,
+  recipe: RecipeType
+}) {
+  return (
+    <div>
+      Currently set to <em>{props.recipe.name}</em>
+      <button onClick={(e) => window.state.toggleEditor()}>
+        edit
+      </button>
+      {props.isEditing ? (
+         <div>
+           <textarea className="code-editor"
+                     value={props.recipe.source}
+                     autoComplete={true}
+                     autoFocus={true}
+                     cols={80}
+                     rows={10} />
+         </div>): ''}
+    </div>
   )
 }

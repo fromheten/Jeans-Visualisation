@@ -1,55 +1,59 @@
 // @flow
 import React, { Component } from 'react'
 import './App.css'
-import {concat, map, range, sortBy, reverse, assoc} from 'ramda'
+import {concat, range, assoc, or} from 'ramda'
 import * as Sale from './Sale'
 import type {SaleType} from './Sale'
 
-import {RecipeMenuView} from './Recipe'
+import {RecipeMenuView, RecipeEditor} from './Recipe'
 import type {RecipeType} from './Recipe'
 import * as store from 'store2'
 
 const sortByDateNewestFirstRecipe: RecipeType = {
   // SaleType[] => SaleType[]
-  fn: (sales: SaleType[]): SaleType[] =>
-    reverse(sortBy((sale) => sale.OrderDate.getTime(), sales)),
+  source: "(sales) => R.reverse(R.sortBy((sale) => sale.OrderDate.getTime(), sales))",
   name: "Sort by date (newest first)",
   author: "Martin Josefsson",
-  license: "GNU GPL v3"
-}
+  license: "GNU GPL v3"}
 
 const sortByDateOldestFirstRecipe: RecipeType = {
   // SaleType[] => SaleType[]
-  fn: (sales: SaleType[]): SaleType[] =>
-    (sortBy((sale) => sale.OrderDate.getTime(), sales)),
+  source: "(sales) => R.sortBy((sale) => sale.OrderDate.getTime(), sales)",
   name: "Sort by date (oldest first)",
   author: "Martin Josefsson",
-  license: "GNU GPL v3"
-}
-
-function getAvailableRecepies (): RecipeType[] {
-  // In the real world this would likely persist to a server
-  return store.get('recipes') || [sortByDateNewestFirstRecipe,
-                                  sortByDateOldestFirstRecipe]}
+  license: "GNU GPL v3"}
 
 class App extends Component {
   state: {
     sales: SaleType[],
-    recipe: RecipeType}
+    recipe: RecipeType,
+    recipes: RecipeType[],
+    isEditing: boolean}
   constructor(props: any) {
     super(props)
     // Poor mans redux - simple version for this demonstration
-    window.setRecipe = ((recipe: RecipeType) => this.setState(
-      // eslint-disable-next-line
-      assoc('recipe', recipe, this.state))).bind(this)
     this.state = {
       sales: [],
-      recipe: sortByDateNewestFirstRecipe/*By default sort by date, newest first*/}}
+      recipe: sortByDateNewestFirstRecipe,/*By default sort by date, newest first*/
+      recipes: or(store.get('recipes'), // In prod, would likely be a server
+                  [sortByDateNewestFirstRecipe, // Defaults
+                   sortByDateOldestFirstRecipe]),
+      isEditing: false}
+    window.state = {
+      // eslint-disable-next-line
+      setRecipe: this.setRecipe.bind(this),
+      toggleEditor: this.toggleEditor.bind(this)}}
+  setRecipe (recipe: RecipeType) {this.setState(assoc('recipe', recipe, this.state))}
+  toggleEditor () {
+    const oldState = this.state;
+    this.setState(assoc('isEditing',
+                        (!oldState.isEditing),
+                        oldState))}
   simulateAjax() {
     this.setState(() => ({
       sales: concat(
         this.state.sales,
-        (map(Sale.createRandomSale, range(0, 100))))}))}
+        (range(0, 100).map(Sale.createRandomSale)))}))}
   render() {
     return (
       <div className="App">
@@ -58,15 +62,12 @@ class App extends Component {
         </button>
         <div className="App-header">
           <h2>Sales Explorer</h2>
-          Currently set to <em>{this.state.recipe.name}</em>
-          <RecipeMenuView recipes={getAvailableRecepies()} />
+          <RecipeEditor recipe={this.state.recipe}
+                        isEditing={this.state.isEditing}/>
+          <RecipeMenuView recipes={this.state.recipes} />
         </div>
-        Sorted by date, newest first
         <Sale.SalesVisualiserView sales={this.state.sales}
                                   recipe={this.state.recipe} />
-      </div>
-    )
-  }
-}
+      </div>)}}
 
 export default App;

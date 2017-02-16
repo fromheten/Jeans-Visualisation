@@ -3,12 +3,11 @@ import {applyRecipe} from './Recipe'
 import type {RecipeType} from './Recipe'
 import * as Sale from './Sale'
 import type {SaleType} from './Sale'
-import {map, range, sortBy, take, reverse} from 'ramda'
+import {map, range, take} from 'ramda'
 import mockSales from './mockSales'
 
 const sortByDateRecipe: RecipeType = {
-  fn: (sales: SaleType[]): SaleType[] =>
-    reverse(sortBy((sale) => sale.OrderDate.getTime(), sales)),
+  source: "(sales) => R.reverse(R.sortBy((sale) => sale.OrderDate.getTime(), sales))",
   name: "Recipe made for test purposes",
   author: "Martin Josefsson",
   license: "GNU GPL v3"}

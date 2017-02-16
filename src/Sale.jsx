@@ -2,7 +2,7 @@
 import React from 'react';
 import {applyRecipe} from './Recipe'
 import type {RecipeType} from './Recipe'
-import {map, addIndex} from 'ramda'
+import {map, addIndex, range} from 'ramda'
 
 type Gender = "Male"
             | "Female"
@@ -40,10 +40,10 @@ export function createRandomSale (): SaleType {
     DeliveryCountry: randomFrom(["Sweden", "UK", "Germany", "France", "Japan", "China", "Austria"]),
     Manufacturer: randomFrom(["Levis", "Ben's Jeans", "ACNE", "Jeans Company"]),
     Gender: randomFrom(["Male", "Female", "Unisex"]),
-    Size: 34,
+    Size: randomFrom(range(10,45)),
     Colour: "blue",
-    Style: "Fit",
-    Count: 5
+    Style: randomFrom(["Relaxed", "Skinny", "Boot Cut", "Cut", "Flare Leg", "Straight Leg", "Fit", "Slim Fit"]),
+    Count: randomFrom(range(1, 1000))
   }
 }
 
