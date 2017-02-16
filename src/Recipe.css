@@ -1,5 +1,8 @@
-.code-editor {
-  font-family: "Source Code Pro", Monaco, monospace;
-  height: 2em;
-  width: 80em;
+.CodeMirror {
+  height: auto !important;
+  text-align: left;
+}
+
+form * {
+  margin-bottom: 0.3em;
 }

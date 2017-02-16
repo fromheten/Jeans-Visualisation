@@ -50,18 +50,13 @@ export default class App extends Component {
     this.setState(assoc('isEditing',
                         (!oldState.isEditing),
                         oldState))}
-  saveRecipe (oldRecipe: RecipeType, event: Event) {
+  saveRecipe (oldRecipe: RecipeType, change: {name: string, value: string}) {
     // Overwrites the old recipe with the new one
     // A novel idea would be to keep commits
     // Since Recipes are immutable, we could save a long history of them.
     // With that you would also get "undo save", and be able to go back in history
-    const {target} = event;
-    if (!(target instanceof window.HTMLInputElement)) {
-      // If here, there is type error
-      return;
-    }
-    const newRecipe = assoc(target.name,
-                            target.value,
+    const newRecipe = assoc(change.name,
+                            change.value,
                             oldRecipe)
     const oldRecipeCollection = this.state.recipes
     const oldState = this.state

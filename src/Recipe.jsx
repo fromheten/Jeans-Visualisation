@@ -10,6 +10,9 @@
 import React from 'react'
 import type {SaleType} from './Sale'
 import './Recipe.css'
+import CodeMirror from 'react-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/mode/javascript/javascript'
 
 export type RecipeType = {
   // fn: (salesList: SaleType[]) => SaleType[],
@@ -46,7 +49,10 @@ export function RecipeEditorView (props: {
   recipe: RecipeType
 }) {
   return (
-    <form onChange={(e) => window.state.saveRecipe(props.recipe, e)} >
+    <form onChange={(e) => window.state.saveRecipe(props.recipe, {
+        name: e.target.name,
+        value: e.target.value
+      })} >
       Currently editing <input type="text"
                                name="name"
                                value={props.recipe.name} />
@@ -59,11 +65,15 @@ export function RecipeEditorView (props: {
                     name="author"
                     value={props.recipe.author} />
         </div>
-        <input className="code-editor"
-               name="source"
-               value={props.recipe.source}
-               cols={80}
-               rows={5} />
+        <CodeMirror value={props.recipe.source}
+                    onChange={(newSource) => window.state.saveRecipe(props.recipe, {
+                        name: 'source',
+                        value: newSource
+                      })}
+                    options={{
+                      lineNumbers: true,
+                      mode: 'javascript'
+                    }} />
         <div>
           <input type="text"
                  name="license"
