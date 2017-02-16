@@ -42,7 +42,7 @@ export function RecipeMenuView(props: {recipes: RecipeType[]}) {
   )
 }
 
-export function RecipeEditor (props: {
+export function RecipeEditorView (props: {
   recipe: RecipeType
 }) {
   return (
@@ -74,7 +74,7 @@ export function RecipeEditor (props: {
   )
 }
 
-export function RecipeDisplay (props: {recipe: RecipeType}) {
+export function RecipeDisplayView (props: {recipe: RecipeType}) {
   return (
     <div>
       Currently set to <em>{props.recipe.name}</em>

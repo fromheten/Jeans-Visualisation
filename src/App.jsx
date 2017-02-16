@@ -5,7 +5,7 @@ import {concat, range, assoc, or, not, equals} from 'ramda'
 import * as Sale from './Sale'
 import type {SaleType} from './Sale'
 
-import {RecipeMenuView, RecipeEditor, RecipeDisplay} from './Recipe'
+import {RecipeMenuView, RecipeEditorView, RecipeDisplayView} from './Recipe'
 import type {RecipeType} from './Recipe'
 import * as store from 'store2'
 
@@ -87,8 +87,8 @@ export default class App extends Component {
         </button>
         <div className="App-header">
           <h2>Sales Explorer</h2>
-          {this.state.isEditing ? <RecipeEditor recipe={this.state.recipe} />
-           : <RecipeDisplay recipe={this.state.recipe} />}
+          {this.state.isEditing ? <RecipeEditorView recipe={this.state.recipe} />
+           : <RecipeDisplayView recipe={this.state.recipe} />}
           <RecipeMenuView recipes={this.state.recipes} />
         </div>
         <Sale.SalesVisualiserView sales={this.state.sales}
