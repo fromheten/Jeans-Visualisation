@@ -43,24 +43,44 @@ export function RecipeMenuView(props: {recipes: RecipeType[]}) {
 }
 
 export function RecipeEditor (props: {
-  isEditing: boolean,
   recipe: RecipeType
 }) {
+  return (
+    <form onChange={(e) => window.state.saveRecipe(props.recipe, e)} >
+      Currently editing <input type="text"
+                               name="name"
+                               value={props.recipe.name} />
+      <button>
+        Save
+      </button>
+      <div>
+        <div>
+          By <input type="text"
+                    name="author"
+                    value={props.recipe.author} />
+        </div>
+        <input className="code-editor"
+               name="source"
+               value={props.recipe.source}
+               cols={80}
+               rows={5} />
+        <div>
+          <input type="text"
+                 name="license"
+                 value={props.recipe.license} />
+        </div>
+      </div>
+    </form>
+  )
+}
+
+export function RecipeDisplay (props: {recipe: RecipeType}) {
   return (
     <div>
       Currently set to <em>{props.recipe.name}</em>
       <button onClick={(e) => window.state.toggleEditor()}>
-        edit
+        Edit
       </button>
-      {props.isEditing ? (
-         <div>
-           <textarea className="code-editor"
-                     value={props.recipe.source}
-                     autoComplete={true}
-                     autoFocus={true}
-                     cols={80}
-                     rows={10} />
-         </div>): ''}
     </div>
   )
 }

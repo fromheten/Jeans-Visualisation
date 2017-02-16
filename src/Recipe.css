@@ -1,3 +1,5 @@
 .code-editor {
   font-family: "Source Code Pro", Monaco, monospace;
+  height: 2em;
+  width: 80em;
 }

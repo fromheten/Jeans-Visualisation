@@ -1,11 +1,11 @@
 // @flow
 import React, { Component } from 'react'
 import './App.css'
-import {concat, range, assoc, or} from 'ramda'
+import {concat, range, assoc, or, not, equals} from 'ramda'
 import * as Sale from './Sale'
 import type {SaleType} from './Sale'
 
-import {RecipeMenuView, RecipeEditor} from './Recipe'
+import {RecipeMenuView, RecipeEditor, RecipeDisplay} from './Recipe'
 import type {RecipeType} from './Recipe'
 import * as store from 'store2'
 
@@ -23,7 +23,7 @@ const sortByDateOldestFirstRecipe: RecipeType = {
   author: "Martin Josefsson",
   license: "GNU GPL v3"}
 
-class App extends Component {
+export default class App extends Component {
   state: {
     sales: SaleType[],
     recipe: RecipeType,
@@ -42,13 +42,38 @@ class App extends Component {
     window.state = {
       // eslint-disable-next-line
       setRecipe: this.setRecipe.bind(this),
-      toggleEditor: this.toggleEditor.bind(this)}}
+      toggleEditor: this.toggleEditor.bind(this),
+      saveRecipe: this.saveRecipe.bind(this)}}
   setRecipe (recipe: RecipeType) {this.setState(assoc('recipe', recipe, this.state))}
   toggleEditor () {
     const oldState = this.state;
     this.setState(assoc('isEditing',
                         (!oldState.isEditing),
                         oldState))}
+  saveRecipe (oldRecipe: RecipeType, event: Event) {
+    // Overwrites the old recipe with the new one
+    // A novel idea would be to keep commits
+    // Since Recipes are immutable, we could save a long history of them.
+    // With that you would also get "undo save", and be able to go back in history
+    const {target} = event;
+    if (!(target instanceof window.HTMLInputElement)) {
+      // If here, there is type error
+      return;
+    }
+    const newRecipe = assoc(target.name,
+                            target.value,
+                            oldRecipe)
+    const oldRecipeCollection = this.state.recipes
+    const oldState = this.state
+    this.setState(
+      assoc('recipe',
+            newRecipe,
+            assoc('recipes',
+                  saveRecipe(oldRecipe,
+                             newRecipe,
+                             oldRecipeCollection),
+                  oldState)))}
+
   simulateAjax() {
     this.setState(() => ({
       sales: concat(
@@ -62,12 +87,19 @@ class App extends Component {
         </button>
         <div className="App-header">
           <h2>Sales Explorer</h2>
-          <RecipeEditor recipe={this.state.recipe}
-                        isEditing={this.state.isEditing}/>
+          {this.state.isEditing ? <RecipeEditor recipe={this.state.recipe} />
+           : <RecipeDisplay recipe={this.state.recipe} />}
           <RecipeMenuView recipes={this.state.recipes} />
         </div>
         <Sale.SalesVisualiserView sales={this.state.sales}
                                   recipe={this.state.recipe} />
       </div>)}}
 
-export default App;
+export function saveRecipe(oldRecipe: RecipeType,
+                           newRecipe: RecipeType,
+                           recipeCollection: RecipeType[]) {
+  return concat(
+    recipeCollection.filter((recipe) => not(equals(recipe, oldRecipe))),
+    [newRecipe]
+  )
+}
