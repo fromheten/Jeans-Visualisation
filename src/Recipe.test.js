@@ -12,7 +12,7 @@ const sortByDateRecipe: RecipeType = {
   author: "Martin Josefsson",
   license: "GNU GPL v3"}
 
-it('applies a "sort by date" recipe successfully', () =>
+it('applies a "sort by date" recipe successfully, using the Ramda library', () =>
   expect(
     applyRecipe(
       sortByDateRecipe,
@@ -41,3 +41,31 @@ it('applies a "sort by date" recipe successfully', () =>
                Colour: 'blue',
                Style: 'Fit',
                Count: 5}]))
+
+const linqRecipe = {
+  source: `(sales) => Enumerable.from(sales)
+                      .Where(s => s.DeliveryCountry === 'UK')
+                      .Where(s => s.Manufacturer === "Ben's Jeans")
+                      .ToArray()`,
+  author: "Martin Josefsson",
+  license: "GNU GPL",
+  name: "Ben's Jeans sales to UK"}
+
+it("let's you use Linq in your recipes - this is the killer part of this app!", () =>
+  expect(applyRecipe(linqRecipe, mockSales))
+    .toEqual([{Colour: "blue",
+               Count: 5,
+               DeliveryCountry: "UK",
+               Gender: "Male",
+               Manufacturer: "Ben\'s Jeans",
+               OrderDate: (new Date("2016-03-09T15:53:22.507Z")),
+               Size: 34,
+               Style: "Fit"},
+              {Colour: "red",
+               Count: 62,
+               DeliveryCountry: "UK",
+               Gender: "Female",
+               Manufacturer: "Ben\'s Jeans",
+               OrderDate: (new Date("2014-12-09T15:53:22.507Z")),
+               Size: 23,
+               Style: "Slim Fit"}]))

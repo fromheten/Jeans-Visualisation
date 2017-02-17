@@ -23,8 +23,11 @@ export type RecipeType = {
 }
 
 export function applyRecipe(recipe: RecipeType, salesList: SaleType[]): SaleType[] {
+  // ESLint isn't a fan of metaprogramming...
   // eslint-disable-next-line
   const R = require('ramda')
+  // eslint-disable-next-line
+  var Enumerable = require("linq-es5");
   // eslint-disable-next-line
   return eval(recipe.source)(salesList)
 }

@@ -23,11 +23,20 @@ const sortByDateOldestFirstRecipe: RecipeType = {
   author: "Martin Josefsson",
   license: "GNU GPL v3"}
 
+const bensJeansUKRecipe: RecipeType = {
+  source: `(sales) => Enumerable.from(sales)
+                      .Where(s => s.DeliveryCountry === 'UK')
+                      .Where(s => s.Manufacturer === "Ben's Jeans")
+                      .ToArray()`,
+  author: "Martin Josefsson",
+  license: "GNU GPL",
+  name: "Ben's Jeans sales to UK"}
+
 type AppStateType = {
-  sales: SaleType[],
-  recipe: RecipeType,
-  recipes: RecipeType[],
-  isEditing: boolean}
+    sales: SaleType[],
+    recipe: RecipeType,
+    recipes: RecipeType[],
+    isEditing: boolean}
 
 export function addRecipe(newRecipe: RecipeType, state: AppStateType) {
   // Set the new recipe in the top of the list, and set it as current recipe
@@ -37,37 +46,37 @@ export function addRecipe(newRecipe: RecipeType, state: AppStateType) {
 
 export default class App extends Component {
   state: AppStateType // Type annotation of component
+
   constructor(props: any) {
     super(props)
     this.state = {
       sales: [],
       recipe: sortByDateNewestFirstRecipe,/*By default sort by date, newest first*/
-      recipes: (store.get("recipes") || [sortByDateNewestFirstRecipe, // Defaults
+      recipes: (store.get("recipes") || [bensJeansUKRecipe,
+                                         sortByDateNewestFirstRecipe,
                                          sortByDateOldestFirstRecipe]),
       isEditing: false,
-      error: false
-    }
+      error: false}
     window.state = {
       // Poor mans redux - simple version for this demonstration
       // eslint-disable-next-line
       setRecipe: this.setRecipe.bind(this),
       toggleEditor: this.toggleEditor.bind(this),
       saveRecipe: this.saveRecipe.bind(this),
-      addRecipe: this.addRecipe.bind(this)
-    }
-  }
+      addRecipe: this.addRecipe.bind(this)}}
+
   addRecipe () {
     const oldState = this.state
     const newRecipe = {
       author: "",
       source: "(sales) => /* Add script here! */",
       name: "",
-      license: "GNU GPL"
-    }
+      license: "GNU GPL"}
     console.log(addRecipe(newRecipe, oldState))
-    this.setState(addRecipe(newRecipe, oldState))
-  }
+    this.setState(addRecipe(newRecipe, oldState))}
+
   setRecipe (recipe: RecipeType) {this.setState(assoc('recipe', recipe, this.state))}
+
   toggleEditor () {
     const oldState = this.state;
     this.setState(assoc('isEditing',
@@ -83,14 +92,15 @@ export default class App extends Component {
                             oldRecipe)
 
     const oldState = this.state
+    // Check for compilation errors, not persisting if they occur
     let error = true;
     try {
+      // eslint-disable-next-line
       eval(newRecipe.source)
-      error = false
-    }
+      error = false}
     catch (e) {
-      error = e
-    }
+      error = e}
+
     const newRecipesState = assoc(
       'error',
       error,
@@ -132,6 +142,4 @@ export function saveRecipe(oldRecipe: RecipeType,
                            recipeCollection: RecipeType[]) {
   return concat(
     recipeCollection.filter((recipe) => not(equals(recipe, oldRecipe))),
-    [newRecipe]
-  )
-}
+    [newRecipe])}
