@@ -48,39 +48,40 @@ export function RecipeMenuView(props: {recipes: RecipeType[]}) {
 export function RecipeEditorView (props: {recipe: RecipeType}) {
   return (
     <form onChange={(e) => window.state.saveRecipe(props.recipe, {
-        name: e.target.name,
-        value: e.target.value
-      })} >
-      Currently editing <input type="text"
-                               name="name"
-                               value={props.recipe.name} />
-      <button onClick={window.state.toggleEditor}>
-        Done
-      </button>
-      <button onClick={alert}>
-        Clone recipe
-      </button>
+      name: e.target.name,
+      value: e.target.value
+    })} >
+    Currently editing <input type="text"
+                             name="name"
+                             value={props.recipe.name} />
+    <button onClick={window.state.toggleEditor}>
+      Done
+    </button>
+
+    <div>
       <div>
-        <div>
-          By <input type="text"
-                    name="author"
-                    value={props.recipe.author} />
-        </div>
-        <CodeMirror value={props.recipe.source}
-                    onChange={(newSource) => window.state.saveRecipe(props.recipe, {
-                        name: 'source',
-                        value: newSource
-                      })}
-                    options={{
-                      lineNumbers: true,
-                      mode: 'javascript'
-                    }} />
-        <div>
-          <input type="text"
-                 name="license"
-                 value={props.recipe.license} />
-        </div>
+        By <input type="text"
+                  name="author"
+                  value={props.recipe.author} />
       </div>
+      <CodeMirror value={props.recipe.source}
+                  onChange={(newSource) => window.state.saveRecipe(props.recipe, {
+                      name: 'source',
+                      value: newSource
+                    })}
+                  options={{
+                    lineNumbers: true,
+                    mode: 'javascript'
+                  }} />
+      <div>
+        <input type="text"
+               name="license"
+               value={props.recipe.license} />
+      </div>
+      <button onClick={(e) => {e.preventDefault() ; window.state.addRecipe()}} >
+        Add New Recipe
+      </button>
+    </div>
     </form>
   )
 }
