@@ -69,7 +69,7 @@ export default class App extends Component {
     const oldState = this.state
     const newRecipe = {
       author: "",
-      source: "(sales) => /* Add script here! */",
+      source: "(sales) => R.reverse(sales)",
       name: "",
       license: "GNU GPL"}
     console.log(addRecipe(newRecipe, oldState))
